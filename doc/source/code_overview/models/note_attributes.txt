@@ -1,0 +1,9 @@
+..
+   This file contains a note about attributes of S2 Models. The note is supposed
+   to appear in every S2 Model's docs page. Therefore, this file will be appended to
+   their reStructuredText files with the include directive.
+
+.. note::
+
+    This list of attributes is subject to change based on updates to the
+    Semantic Scholar API. Please open an issue if you notice this.
