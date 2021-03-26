@@ -52,6 +52,5 @@ setup(
             "pytest >=6, <7",
         ],
     },
-    packages=find_packages(where="s2"),
-    package_data={"": ["LICENSE.txt"]}
+    packages=find_packages(include=["s2","s2.*"]),
 )
