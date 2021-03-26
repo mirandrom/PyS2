@@ -1,0 +1,4 @@
+requests >=2.6, <3.0
+pydantic >=1.8, <2.0
+betamax >=0.8, <1.0
+pytest>=6.2, <7.0
