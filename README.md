@@ -1,4 +1,4 @@
-# PyS2: Python Library for the Semantic Scholar (S2) API
+# PyS2: Python Library for the Semantic Scholar API
 
 [![Latest PyS2 Version](https://img.shields.io/pypi/v/pys2.svg)](https://pypi.python.org/pypi/pys2)
 [![License](https://img.shields.io/github/license/mirandrom/pys2.svg)](https://pypi.python.org/pypi/pys2)
