@@ -1,4 +1,11 @@
 # PyS2
+
+[![Latest PyS2 Version](https://img.shields.io/pypi/v/pys2.svg)](https://pypi.python.org/pypi/pys2)
+[![License](https://img.shields.io/github/license/mirandrom/pys2.svg)](https://pypi.python.org/pypi/pys2)
+[![CI](https://github.com/mirandrom/pys2/actions/workflows/ci.yml/badge.svg)](https://github.com/mirandrom/pys2/actions?query=branch%3Amaster)
+[![ReadTheDocs](https://readthedocs.org/projects/pys2/badge/?version=latest)](https://pys2.readthedocs.io/)
+
+
 A python library for the [Semantic Scholar (S2) API](api.semanticscholar.org/) 
 with typed [pydantic](https://pydantic-docs.helpmanual.io/) objects 
 and various nifty functionalities. 
