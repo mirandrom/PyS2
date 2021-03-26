@@ -1,0 +1,2 @@
+include CHANGES.rst LICENSE.txt README.md
+recursive-include tests *.json *.py

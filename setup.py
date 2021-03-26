@@ -52,5 +52,5 @@ setup(
         ],
     },
     packages=find_packages(where="s2"),
-    package_data={"": ["LICENSE"]}
+    package_data={"": ["LICENSE.txt"]}
 )
