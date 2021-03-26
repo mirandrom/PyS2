@@ -1,12 +1,17 @@
 from setuptools import setup, find_packages
 import pathlib
+import re
 
 here = pathlib.Path(__file__).parent.resolve()
 readme = (here / "README.md").read_text(encoding="utf-8")
+version = re.search(
+    '__version__ = "([^"]+)"',
+    (here / "s2/__init__.py").read_text(encoding="utf-8")
+).group(1)
 
 setup(
     name="s2py",
-    version="0.1.0",
+    version=version,
     author="mirandrom",
     description=("S2Py  is a python wrapper for the Semantic Scholar (S2) API"),
 
