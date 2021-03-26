@@ -130,7 +130,7 @@ published *h* papers that have each been cited at least *h* times.
 
 ```python
 n_citations = sorted([len(p.citations) for p in papers], reverse=True)
-for n_papers, n_cited in enumerate(num_citations):
+for n_papers, n_cited in enumerate(n_citations):
     if n_cited < n_papers:
         h_index = n_papers - 1
         break
