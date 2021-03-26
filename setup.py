@@ -10,19 +10,19 @@ version = re.search(
 ).group(1)
 
 setup(
-    name="s2py",
+    name="pys2",
     version=version,
     author="mirandrom",
-    description=("S2Py  is a python wrapper for the Semantic Scholar (S2) API"),
+    description=("PyS2  is a python wrapper for the Semantic Scholar (S2) API"),
 
     long_description_content_type="text/markdown",
     long_description=readme,
     keywords="semantic scholar, s2, scientific literature, citation graph",
-    url="https://github.com/mirandrom/s2py/",
+    url="https://github.com/mirandrom/pys2/",
     project_urls={ 
-        "Bug Reports": "https://github.com/mirandrom/s2py/issues",
-        "Source": "https://github.com/mirandrom/s2py/",
-        "Docs": "https://s2py.readthedocs.org/",
+        "Bug Reports": "https://github.com/mirandrom/pys2/issues",
+        "Source": "https://github.com/mirandrom/pys2/",
+        "Docs": "https://pys2.readthedocs.org/",
     },
     classifiers=[
         "Development Status :: 4 - Beta",

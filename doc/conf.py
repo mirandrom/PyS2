@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 from s2 import __version__
 
-project = 'S2Py'
+project = 'PyS2'
 copyright = '2021, mirandrom'
 author = 'mirandrom'
 release = __version__

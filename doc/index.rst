@@ -1,7 +1,7 @@
 S2py
 ================================
 
-S2Py's documentation is organized into the following sections:
+PyS2's documentation is organized into the following sections:
 
 - :ref:`getting_started`
 - :ref:`code_overview`

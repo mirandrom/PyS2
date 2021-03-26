@@ -1,11 +1,11 @@
-Installing S2Py
+Installing PyS2
 ===============
 
-S2Py supports Python 3.6+. The recommended way to install S2Py is via ``pip``.
+PyS2 supports Python 3.6+. The recommended way to install PyS2 is via ``pip``.
 
 .. code-block:: bash
 
-    pip install s2py
+    pip install pys2
 
 .. note::
 
@@ -19,27 +19,27 @@ S2Py supports Python 3.6+. The recommended way to install S2Py is via ``pip``.
 For instructions on installing Python and pip see "The Hitchhiker's Guide to Python"
 `Installation Guides <https://docs.python-guide.org/en/latest/starting/installation/>`_.
 
-Updating S2Py
+Updating PyS2
 -------------
 
-S2Py can be updated by running:
+PyS2 can be updated by running:
 
 .. code-block:: bash
 
-    pip install --upgrade s2py
+    pip install --upgrade pys2
 
 
 Installing the Latest Development Version
 -----------------------------------------
 
-You can install S2Py directly from GitHub like so:
+You can install PyS2 directly from GitHub like so:
 
 .. code-block:: bash
 
-    pip install --upgrade https://github.com/mirandrom/s2py/archive/master.zip
+    pip install --upgrade https://github.com/mirandrom/pys2/archive/master.zip
 
 You can also directly clone a copy of the repository using git, like so:
 
 .. code-block:: bash
 
-    pip install --upgrade git+https://github.com/mirandrom/s2py.git
+    pip install --upgrade git+https://github.com/mirandrom/pys2.git

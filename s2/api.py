@@ -67,7 +67,7 @@ def get_paper(
             Defaults to ``None``
         return_json (:obj:`bool`, optional):
             Return original json from get request
-            (e.g. in case of S2Py-breaking changes to the S2 API).
+            (e.g. in case of PyS2-breaking changes to the S2 API).
             Defaults to ``False``
         retries (:obj:`int`, optional):
             Number of retry attempts after rate limit is exceeded.
@@ -136,7 +136,7 @@ def get_author(
             Defaults to ``None``
         return_json (:obj:`bool`, optional):
             Return original json from get request
-            (e.g. in case of S2Py-breaking changes to the S2 API).
+            (e.g. in case of PyS2-breaking changes to the S2 API).
             Defaults to ``False``
         retries (:obj:`int`, optional):
             Number of retry attempts after rate limit is exceeded.
