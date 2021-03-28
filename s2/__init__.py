@@ -1,4 +1,18 @@
-__version__ = "1.0.2"
+__version__ = "1.1.0"
 
-from s2 import api
-from s2 import models
+import logging
+
+
+def _setup_logger():
+    logger = logging.getLogger(__name__)
+    handler = logging.StreamHandler()
+    handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s\t%(levelname)s %(filename)s:%(lineno)s -- %(message)s"
+        ))
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+
+_setup_logger()

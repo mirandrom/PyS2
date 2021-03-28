@@ -1,10 +1,13 @@
 import requests
 import time
 from s2.models import S2Paper, S2Author
+import logging
 from typing import Optional, Union, Dict, Tuple
 
 API_URL = "https://api.semanticscholar.org/v1"
 PARTNER_URL = "https://partner.semanticscholar.org/v1"
+
+logger = logging.getLogger('s2')
 
 
 def build_url(
@@ -99,14 +102,14 @@ def get_paper(
             return S2Paper(**r.json())
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
-        print(f"Error {r.status_code} on paper {paperId}: "
-              f" sleeping for {wait} seconds"
-              f" with {retries} attempts remaining.")
+        logger.warning(f"Error {r.status_code} on paper {paperId}: "
+                       f" sleeping for {wait} seconds"
+                       f" with {retries} attempts remaining.")
         time.sleep(wait)
         return get_paper(paperId, api_key, session, return_json,
                          retries-1, wait, **kwargs)
     else:
-        print(f"Error {r.status_code} on paper {paperId}")
+        logger.error(f"Error {r.status_code} on paper {paperId}")
         r.raise_for_status()
 
 
@@ -166,12 +169,12 @@ def get_author(
             return S2Author(**r.json())
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
-        print(f"Error {r.status_code} on author {authorId}: "
-              f" sleeping for {wait} seconds"
-              f" with {retries} attempts remaining.")
+        logger.warning(f"Error {r.status_code} on author {authorId}: "
+                       f" sleeping for {wait} seconds"
+                       f" with {retries} attempts remaining.")
         time.sleep(wait)
         return get_author(authorId, api_key, session, return_json,
                           retries-1, wait, **kwargs)
     else:
-        print(f"Error {r.status_code} on author {authorId}")
+        logger.error(f"Error {r.status_code} on author {authorId}")
         r.raise_for_status()
