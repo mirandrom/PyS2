@@ -3,6 +3,7 @@
 [![Latest PyS2 Version](https://img.shields.io/pypi/v/pys2.svg)](https://pypi.python.org/pypi/pys2)
 [![License](https://img.shields.io/github/license/mirandrom/pys2.svg)](https://pypi.python.org/pypi/pys2)
 [![CI](https://github.com/mirandrom/pys2/actions/workflows/ci.yml/badge.svg)](https://github.com/mirandrom/pys2/actions?query=branch%3Amaster)
+[![codecov](https://codecov.io/gh/mirandrom/PyS2/branch/master/graph/badge.svg?token=4GTVZ5P6S2)](https://codecov.io/gh/mirandrom/PyS2)
 [![ReadTheDocs](https://readthedocs.org/projects/pys2/badge/?version=latest)](https://pys2.readthedocs.io/)
 
 
