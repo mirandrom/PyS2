@@ -1,4 +1,4 @@
-S2py
+PyS2
 ================================
 
 PyS2's documentation is organized into the following sections:
