@@ -65,6 +65,12 @@ Using a custom :class:`requests.Session`
     session.headers = {'x-api-key': API_KEY}
     paper = s2.api.get_paper(paperId=pid, session=session)
 
+.. note::
+
+    Passing an API key through the ``api_key`` argument will
+    temporarily overwrite a key stored in ``session`` for that request.
+    However, the ``session`` object itself will remain unchanged.
+
 The same approaches can be used for the :func:`.api.get_author` function
 covered below.
 

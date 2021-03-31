@@ -1,6 +1,7 @@
 __version__ = "1.1.0"
 
 import logging
+from s2 import api, models
 
 
 def _setup_logger():

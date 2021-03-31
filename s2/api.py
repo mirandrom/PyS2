@@ -3,6 +3,7 @@ import time
 from s2.models import S2Paper, S2Author
 import logging
 from typing import Optional, Union, Dict, Tuple
+import copy
 
 API_URL = "https://api.semanticscholar.org/v1"
 PARTNER_URL = "https://partner.semanticscholar.org/v1"
@@ -22,15 +23,20 @@ def build_url(
 def build_session(
         session: Optional[requests.Session] = None,
         api_key: Optional[str] = None,
-) -> Tuple[requests.Session, str]:
-    """ Build session and reconcile passing of api key via arg or via session"""
+) -> requests.Session:
+    """ Build session and reconcile passing of api key via arg or via session
+
+    If an api key is included in the session headers, and passed through the
+    `api_key` arg, then the value in the session headers will be overwritten
+    temporarily for this request.
+    """
+    if api_key and session:
+        session = copy.deepcopy(session)
     if session is None:
         session = requests.Session()
     if api_key:
         session.headers['x-api-key'] = api_key
-    else:
-        api_key = session.headers.get('x-api-key', None)
-    return session, api_key
+    return session
 
 
 def get_paper(
@@ -62,11 +68,12 @@ def get_paper(
             * Corpus ID : ``CorpusID:37220927``
         api_key  (:obj:`str`, optional):
             A `Data Partners <https://pages.semanticscholar.org/data-partners>`_
-            API key.
+            API key. Overwrites API key passed through ``session``.
             Defaults to ``None``
         session (:obj:`requests.Session`, optional):
-            A :class:`requests.Session` object, can be used to store API key
-            (see :any:`using_an_api_key`).
+            A :class:`requests.Session` object, can be used to store an API key
+            (see :any:`using_an_api_key`). Note that ``api_key`` will overwrite
+            this value if it is provided.
             Defaults to ``None``
         return_json (:obj:`bool`, optional):
             Return original json from get request
@@ -91,8 +98,9 @@ def get_paper(
         :class:`dict` or :class:`~s2.models.S2Paper`:
         A :class:`~s2.models.S2Paper` or `dict` object describing the paper
     """
-    session, api_key = build_session(session, api_key)
-    url = build_url(paperId, endpoint='paper', partner=bool(api_key))
+    session = build_session(session, api_key)
+    partner = 'x-api-key' in session.headers
+    url = build_url(paperId, endpoint='paper', partner=partner)
     r = session.get(url, **kwargs)
 
     if r.ok:
@@ -131,11 +139,12 @@ def get_author(
             Semantic Scholar author identifier.
         api_key  (:obj:`str`, optional):
             A `Data Partners <https://pages.semanticscholar.org/data-partners>`_
-            API key.
+            API key. Temporarily overwrites API key passed through ``session``.
             Defaults to ``None``
         session (:obj:`requests.Session`, optional):
-            A :class:`requests.Session` object, can be used to store API key
-            (see :any:`using_an_api_key`).
+            A :class:`requests.Session` object, can be used to store an API key
+            (see :any:`using_an_api_key`). Note that ``api_key`` will overwrite
+            this value temporarily if it is provided.
             Defaults to ``None``
         return_json (:obj:`bool`, optional):
             Return original json from get request
@@ -158,8 +167,9 @@ def get_author(
         :class:`dict` or :class:`~s2.models.S2Author`:
         A :class:`~s2.models.S2Author` or `dict` object describing the author
     """
-    session, api_key = build_session(session, api_key)
-    url = build_url(authorId, endpoint='author', partner=bool(api_key))
+    session = build_session(session, api_key)
+    partner = 'x-api-key' in session.headers
+    url = build_url(authorId, endpoint='author', partner=partner)
     r = session.get(url, **kwargs)
 
     if r.ok:
