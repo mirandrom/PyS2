@@ -167,7 +167,7 @@ class JsonS2AuthorDB(MutableMapping):
             raise KeyError(f.stem)
 
     def _check_key_value(self, k: AuthorId, v: S2Author):
-        if v.paperId and v.paperId != k:
+        if v.authorId and v.authorId != k:
             raise KeyError(f"Provided key {k} for S2Author with id {v.authorId}")
 
     def __contains__(self, k: AuthorId) -> bool:
