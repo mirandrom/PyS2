@@ -1,5 +1,5 @@
 S2Paper
-=======
+--------------------------------------------------------------------------------
 
 .. autoclass:: s2.models.S2Paper
 
@@ -9,4 +9,4 @@ S2Paper
 
 .. autoclass:: s2.models.S2Topic
 
-.. include:: note_attributes.txt
+.. include:: /api_reference/models/note_attributes.txt

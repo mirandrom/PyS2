@@ -65,6 +65,12 @@ Using a custom :class:`requests.Session`
     session.headers = {'x-api-key': API_KEY}
     paper = s2.api.get_paper(paperId=pid, session=session)
 
+.. note::
+
+    Passing an API key through the ``api_key`` argument will
+    temporarily overwrite a key stored in ``session`` for that request.
+    However, the ``session`` object itself will remain unchanged.
+
 The same approaches can be used for the :func:`.api.get_author` function
 covered below.
 
@@ -136,3 +142,74 @@ published *h* papers that have each been cited at least *h* times.
             break
 
 Which gives us an *h*-index 12 for Bill Gates!
+
+.. _saving_with_db:
+
+Saving and Working Locally with :any:`s2.db`
+--------------------------------------------------------------------------------
+The :any:`s2.db` API makes it easy to save and retrieve your :class:`.S2Paper`
+and :class:`.S2Author` objects through a dict-like interface.
+
+.. code-block:: python
+
+    from s2.db.json import JsonS2PaperDB, JsonS2AuthorDB
+
+    # path of directory where S2Papers will be saved as jsons
+    s2paper_json_dir = "pdb"
+
+    # if the directory does not exist, it is created
+    # otherwise, previously saved S2Papers become accessible
+    pdb = JsonS2PaperDB(s2paper_json_dir)
+
+    # lets save Bill's papers from the previous example
+    for p in papers:
+        pdb[p.paperId] = p
+
+    # now lets delete pdb and recover Bill's papers
+    del pdb
+    pdb = JsonS2PaperDB(s2paper_json_dir)
+    for p in papers:
+        p2 = pdb[p.paperId]
+        assert p2 == p
+
+    # we can do the same for S2Author objects
+    adb = JsonS2AuthorDB("adb")
+    adb[author.authorId] = author
+
+    # note that setting a value requires the key to be equal to the
+    # S2 identifier of the object, but this behaviour can be disabled
+    adb = JsonS2AuthorDB("adb", enforce_id=False)
+    adb["billy"] = author
+
+
+.. _saving_unknown:
+
+Saving Objects without S2 Identifiers
+--------------------------------------------------------------------------------
+Sometimes, a :class:`.S2Reference` object may not have a ``paperId`` value if
+you are using ``include_unknown_references=True``.
+In this case, you still may want to save it (e.g. to attempt recovering it
+via different methods at a later date). To do this, you can cast it to
+:class:`.S2Paper` and create a unique placeholder id
+
+.. code-block:: python
+
+    from s2.db.json import JsonS2PaperDB, JsonS2AuthorDB
+
+    # note that enforce_id=False is not necessary
+    pdb = JsonS2PaperDB("pdb")
+
+    # lets hunt ourselves an unknown reference from Bill's paper
+    paper = s2.api.get_paper(
+        "bdfa1a62c964f19b5ce000d7812ba9f66456a4a4",
+         params=dict(include_unknown_references=True),
+    )
+    for r in paper.references:
+        if not r.paperId:
+            break
+
+    # create a 40-char key from the hashed content and a signpost prefix
+    hash = hashlib.md5(r.json().encode("utf-8")).hexdigest()
+    placeholder_id = f"unknown_{hash}"
+    pdb[placeholder_id] = S2Paper(**r.dict())
+

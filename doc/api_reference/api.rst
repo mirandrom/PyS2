@@ -1,6 +1,5 @@
-API Endpoints
-=============
-
+s2.api
+================================================================================
 PyS2 uses :meth:`requests.Session.get` to query Semantic Scholar API
 endpoints. Functionality for `Data Partners
 <https://pages.semanticscholar.org/data-partners>`_,
@@ -10,5 +9,5 @@ or :class:`.models.S2Author` classes are included.
 .. toctree::
     :maxdepth: 2
 
-    api/get_paper
-    api/get_author
+.. include:: api/get_paper.rst
+.. include:: api/get_author.rst

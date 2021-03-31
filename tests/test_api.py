@@ -80,28 +80,24 @@ class TestApi(TestCase):
 
     def test_build_session(self):
         # default no session and no api key
-        session, api_key = api.build_session(None, None)
+        session = api.build_session(None, None)
         assert 'x-api-key' not in session.headers
-        assert api_key is None
         # custom session and no api key
-        session, api_key = api.build_session(Session(), None)
+        session = api.build_session(Session(), None)
         assert 'x-api-key' not in session.headers
-        assert api_key is None
         # custom session and arg api key
         arg_api_key = '123'
-        session, api_key = api.build_session(Session(), arg_api_key)
+        session = api.build_session(Session(), arg_api_key)
         assert session.headers['x-api-key'] == arg_api_key
-        assert api_key == arg_api_key
         # custom session and session api key
         session = Session()
         session_api_key = '456'
         session.headers['x-api-key'] = session_api_key
-        session, api_key = api.build_session(session, None)
+        session = api.build_session(session, None)
         assert session.headers['x-api-key'] == session_api_key
-        assert api_key == session_api_key
         # custom session and session+arg api key (allow overriding)
-        session = Session()
-        session.headers['x-api-key'] = session_api_key
-        session, api_key = api.build_session(session, arg_api_key)
+        custom_session = Session()
+        custom_session.headers['x-api-key'] = session_api_key
+        session = api.build_session(session, arg_api_key)
         assert session.headers['x-api-key'] == arg_api_key
-        assert api_key == arg_api_key
+        assert custom_session.headers['x-api-key'] == session_api_key

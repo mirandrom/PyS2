@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+# TODO: add data validators for consistent handling of empty types
+#       see https://github.com/samuelcolvin/pydantic/discussions/2611#discussion-3300585
+
 
 class S2Topic(BaseModel):
     """
@@ -135,8 +138,8 @@ class S2Paper(BaseModel):
     doi: Optional[str]
     fieldsOfStudy: Optional[List[str]]
     influentialCitationCount: Optional[int]
-    is_open_access: bool
-    is_publisher_licensed: bool
+    is_open_access: Optional[bool]
+    is_publisher_licensed: Optional[bool]
     paperId: Optional[str]
     references: Optional[List[S2Reference]]
     title: Optional[str]
