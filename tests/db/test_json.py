@@ -49,9 +49,14 @@ class TestJson(TestCase):
             assert pdb[k] == pdb_tmp[k]
 
         # delete key and check for keyerrors
-        pdb_tmp.pop(k)
+        p = pdb_tmp.pop(k)
         with pytest.raises(KeyError):
             _ = pdb_tmp[k]
+
+        # enforce_id behavior
+        with pytest.raises(KeyError):
+            wrong_key = k[:-1]
+            pdb_tmp[wrong_key] = p
 
         # check for type errors
         p = pdb[k]
@@ -83,9 +88,14 @@ class TestJson(TestCase):
             assert adb[k] == adb_tmp[k]
 
         # delete key and check for keyerrors
-        adb_tmp.pop(k)
+        a = adb_tmp.pop(k)
         with pytest.raises(KeyError):
             _ = adb_tmp[k]
+
+        # enforce_id behavior
+        with pytest.raises(KeyError):
+            wrong_key = k[:-1]
+            adb_tmp[wrong_key] = a
 
         # check for type errors
         a = adb[k]
