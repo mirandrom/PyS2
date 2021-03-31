@@ -1,5 +1,5 @@
-Quick Start
-===========
+Examples
+================================================================================
 
 Getting Papers
 --------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ Which gives us an *h*-index 12 for Bill Gates!
 
 .. _saving_with_db:
 
-Saving and Working Locally with :any:`s2.db`
+Working Locally with :any:`s2.db`
 --------------------------------------------------------------------------------
 The :any:`s2.db` API makes it easy to save and retrieve your :class:`.S2Paper`
 and :class:`.S2Author` objects through a dict-like interface.
@@ -185,7 +185,7 @@ and :class:`.S2Author` objects through a dict-like interface.
 .. _saving_unknown:
 
 Saving Objects without S2 Identifiers
---------------------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Sometimes, a :class:`.S2Reference` object may not have a ``paperId`` value if
 you are using ``include_unknown_references=True``.
 In this case, you still may want to save it (e.g. to attempt recovering it

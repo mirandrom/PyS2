@@ -25,7 +25,7 @@ pip install --upgrade https://github.com/mirandrom/pys2/archive/master.zip
 ```
 
 ## Examples
-### Obtaining an [``S2Paper``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Paper.html) Object
+### Obtaining an [``S2Paper``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2paper) Object
 To scrape a paper from the S2 API, you first need an S2 paper identifier.
 This can be found at the end of the URL of a paper on Semantic Scholar.
 
@@ -36,7 +36,7 @@ The S2 identifier can also be specified based on a paper's identifier from
 other platforms. For example, the [same paper on arxiv](https://arxiv.org/abs/1407.5648) also has the S2 identifier
 ``arXiv:1407.5648``. The convention for different platforms is described on
 the [S2 API page](https://api.semanticscholar.org/), as well as in the
-PyS2 documentation for [``get_paper``](https://pys2.readthedocs.io/en/latest/code_overview/api/get_paper.html). 
+PyS2 documentation for [``get_paper``](https://pys2.readthedocs.io/en/latest/api_reference/api.html#get-paper). 
 In fact, we will use this method to scrape the paper above with the two 
 different identifiers and show that they indeed give the same paper.
 
@@ -76,7 +76,7 @@ paper = s2.api.get_paper(paperId=pid, session=session)
 ```
 
 The same approaches can be used for the PyS2 function 
-[``get_paper``](https://pys2.readthedocs.io/en/latest/code_overview/api/get_paper.html) 
+[``get_author``](https://pys2.readthedocs.io/en/latest/api_reference/api.html#get-paper) 
  covered below.
 
 ### Get all the Papers of an Author
@@ -86,9 +86,9 @@ who was an S2 ``AuthorId`` of ``144794037``. This will also allow us to compute 
 [*h*-index](https://en.wikipedia.org/wiki/H-index).
 
 
-#### Obtain [``S2Author``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Author.html) Object
+#### Obtain [``S2Author``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2author) Object
 Simply pass the ``AuthorId`` to
-the PyS2 function [``get_author``](https://pys2.readthedocs.io/en/latest/code_overview/api/get_author.html):
+the PyS2 function [``get_author``](https://pys2.readthedocs.io/en/latest/api_reference/api.html#get-author):
 
 ```python
 import s2
@@ -96,24 +96,24 @@ import s2
 author = s2.api.get_author(authorId="144794037")
 ```
 
-And just like that, we now have an [``S2Author``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Author.html) instance from which we
+And just like that, we now have an [``S2Author``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2author) instance from which we
 can extract their papers, stored as 
-[``S2AuthorPaper``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Author.html#s2.models.S2AuthorPaper) 
+[``S2AuthorPaper``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2author#s2.models.S2AuthorPaper) 
 instances. However,
 this object contains limited information and so we must use
-[``get_paper``](https://pys2.readthedocs.io/en/latest/code_overview/api/get_paper.html)
-to obtain the [``S2Paper``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Paper.html) instances which contain
+[``get_paper``](https://pys2.readthedocs.io/en/latest/api_reference/api.html#get-paper)
+to obtain the [``S2Paper``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2paper) instances which contain
 the complete information for a paper.
 
 
-#### Obtain Multiple [``S2Paper``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Paper.html)  Objects
+#### Obtain Multiple [``S2Paper``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2paper)  Objects
 Because we are performing multiple requests, we can include ``retries`` and
-``wait`` arguments to [``get_paper``](https://pys2.readthedocs.io/en/latest/code_overview/api/get_paper.html)
+``wait`` arguments to [``get_paper``](https://pys2.readthedocs.io/en/latest/api_reference/api.html#get-paper)
 to work around rate-limiting. The default values of 2 and
 150 are conservative but work well for the public API. Lastly, we can specify
-that [``S2Paper``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Paper.html)  
+that [``S2Paper``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2paper)  
 instances returned include references or citations
-([``S2Reference``](https://pys2.readthedocs.io/en/latest/code_overview/models/S2Paper.html#s2.models.S2Reference)) that are not indexed by Semantic Scholar, e.g. if we
+([``S2Reference``](https://pys2.readthedocs.io/en/latest/api_reference/models.html#s2paper#s2.models.S2Reference)) that are not indexed by Semantic Scholar, e.g. if we
 want to attempt recovering them in a different way.
 
 ```python
@@ -145,3 +145,38 @@ for n_papers, n_cited in enumerate(n_citations):
 ```
 Which gives us an *h*-index 12 for Bill Gates!
 
+### Working locally with [``s2.db``](https://pys2.readthedocs.io/en/latest/api_reference/db.html)
+The [``s2.db``](https://pys2.readthedocs.io/en/latest/api_reference/db.html) 
+API makes it easy to save and retrieve your ``S2Paper``
+and ``S2Author`` objects through a dict-like interface.
+
+```python
+from s2.db.json import JsonS2PaperDB, JsonS2AuthorDB
+
+# path of directory where S2Papers will be saved as jsons
+s2paper_json_dir = "pdb"
+
+# if the directory does not exist, it is created
+# otherwise, previously saved S2Papers become accessible
+pdb = JsonS2PaperDB(s2paper_json_dir)
+
+# lets save Bill's papers from the previous example
+for p in papers:
+    pdb[p.paperId] = p
+
+# now lets delete pdb and recover Bill's papers
+del pdb
+pdb = JsonS2PaperDB(s2paper_json_dir)
+for p in papers:
+    p2 = pdb[p.paperId]
+    assert p2 == p
+
+# we can do the same for S2Author objects
+adb = JsonS2AuthorDB("adb")
+adb[author.authorId] = author
+
+# note that setting a value requires the key to be equal to the
+# S2 identifier of the object, but this behaviour can be disabled
+adb = JsonS2AuthorDB("adb", enforce_id=False)
+adb["billy"] = author
+```

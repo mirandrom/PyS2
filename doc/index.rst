@@ -14,7 +14,7 @@ PyS2's documentation is organized into the following sections:
     :caption: Getting Started
 
     getting_started/installation
-    getting_started/quick_start
+    getting_started/examples
 
 .. _api_reference:
 
