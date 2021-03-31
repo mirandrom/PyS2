@@ -96,7 +96,7 @@ def get_paper(
 
     Returns:
         :class:`dict` or :class:`~s2.models.S2Paper`:
-        A :class:`~s2.models.S2Paper` or `dict` object describing the paper
+        A :class:`~s2.models.S2Paper` or ``dict`` object describing the paper
     """
     session = build_session(session, api_key)
     partner = 'x-api-key' in session.headers
@@ -165,7 +165,7 @@ def get_author(
 
     Returns:
         :class:`dict` or :class:`~s2.models.S2Author`:
-        A :class:`~s2.models.S2Author` or `dict` object describing the author
+        A :class:`~s2.models.S2Author` or ``dict`` object describing the author
     """
     session = build_session(session, api_key)
     partner = 'x-api-key' in session.headers

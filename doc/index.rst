@@ -4,7 +4,7 @@ S2py
 PyS2's documentation is organized into the following sections:
 
 - :ref:`getting_started`
-- :ref:`code_overview`
+- :ref:`api_reference`
 - :ref:`package_info`
 
 .. _getting_started:
@@ -16,14 +16,15 @@ PyS2's documentation is organized into the following sections:
     getting_started/installation
     getting_started/quick_start
 
-.. _code_overview:
+.. _api_reference:
 
 .. toctree::
     :maxdepth: 1
-    :caption: Code Overview
+    :caption: API Reference
 
-    code_overview/models
-    code_overview/api
+    api_reference/models
+    api_reference/api
+    api_reference/db
 
 .. _package_info:
 
