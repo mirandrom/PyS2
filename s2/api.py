@@ -1,14 +1,19 @@
 import requests
 import time
 from s2.models import S2Paper, S2Author
-import logging
-from typing import Optional, Union, Dict, Tuple
 import copy
+from datetime import datetime
+
+from typing import Optional, Union, Dict, Tuple
+
+import logging
+logger = logging.getLogger('s2')
+
+# TODO: time persistent session vs not; if noticeable performance increase
+#       then make session mandatory and remove api_key / build_url
 
 API_URL = "https://api.semanticscholar.org/v1"
 PARTNER_URL = "https://partner.semanticscholar.org/v1"
-
-logger = logging.getLogger('s2')
 
 
 def build_url(
@@ -104,10 +109,12 @@ def get_paper(
     r = session.get(url, **kwargs)
 
     if r.ok:
+        d = r.json()
+        d['obtained_utc'] = datetime.utcnow()
         if return_json:
-            return r.json()
+            return d
         else:
-            return S2Paper(**r.json())
+            return S2Paper(**d)
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
         logger.warning(f"Error {r.status_code} on paper {paperId}: "
@@ -173,10 +180,12 @@ def get_author(
     r = session.get(url, **kwargs)
 
     if r.ok:
+        d = r.json()
+        d['obtained_utc'] = datetime.utcnow()
         if return_json:
-            return r.json()
+            return d
         else:
-            return S2Author(**r.json())
+            return S2Author(**d)
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
         logger.warning(f"Error {r.status_code} on author {authorId}: "

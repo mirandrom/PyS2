@@ -1,11 +1,20 @@
-from pydantic import BaseModel
-from typing import List, Optional
-
-# TODO: add data validators for consistent handling of empty types
-#       see https://github.com/samuelcolvin/pydantic/discussions/2611#discussion-3300585
+from pydantic import BaseModel, validator
+from datetime import datetime
+from typing import List, Optional, Iterable
 
 
-class S2Topic(BaseModel):
+class S2Model(BaseModel):
+    @validator('*', pre=True)
+    def convert_to_none(cls, v):
+        if isinstance(v, str) and v.strip() == "":
+            return None
+        if isinstance(v, Iterable) and len(v) == 0:
+            return None
+        else:
+            return v
+
+
+class S2Topic(S2Model):
     """
     Class for topics in :class:`.models.S2Paper`
 
@@ -23,7 +32,7 @@ class S2Topic(BaseModel):
     url: Optional[str]
 
 
-class S2PaperAuthor(BaseModel):
+class S2PaperAuthor(S2Model):
     """
     Class for authors in :class:`.S2Paper`
     or :class:`.S2Reference`
@@ -45,7 +54,7 @@ class S2PaperAuthor(BaseModel):
     url: Optional[str] = None
 
 
-class S2Reference(BaseModel):
+class S2Reference(S2Model):
     """
     Class for papers that are references/citations in :class:`.S2Paper`
 
@@ -85,7 +94,7 @@ class S2Reference(BaseModel):
     year: Optional[int]
 
 
-class S2Paper(BaseModel):
+class S2Paper(S2Model):
     """
     Class for Semantic Scholar paper object
 
@@ -128,6 +137,9 @@ class S2Paper(BaseModel):
             Extracted publication venue of the paper
         year (:obj:`int`, optional):
             Publication year of the paper
+        obtained_utc  (:class:`~datetime.datetime`, optional):
+            UTC datetime when obtained from API (converted to and from
+            ISO 8601 by pydantic in JSON (de)serialization)
     """
     abstract: Optional[str]
     arxivId: Optional[str]
@@ -147,9 +159,10 @@ class S2Paper(BaseModel):
     url: Optional[str]
     venue: Optional[str]
     year: Optional[int]
+    obtained_utc: Optional[datetime]
 
 
-class S2AuthorPaper(BaseModel):
+class S2AuthorPaper(S2Model):
     """
     Class for papers in :class:`.S2Author`
 
@@ -170,7 +183,7 @@ class S2AuthorPaper(BaseModel):
     year: Optional[int]
 
 
-class S2Author(BaseModel):
+class S2Author(S2Model):
     """
     Class for Semantic Scholar author object
 
@@ -187,7 +200,10 @@ class S2Author(BaseModel):
         papers  (:obj:`list` of :obj:`.S2AuthorPaper`, optional):
             List of papers written by the author
         url  (:obj:`str`, optional):
-            Semantic Scholar URL to author page.
+            Semantic Scholar URL to author page
+        obtained_utc  (:class:`~datetime.datetime`, optional):
+            UTC datetime when obtained from API (converted to and from
+            ISO 8601 by pydantic in JSON (de)serialization)
     """
     aliases: Optional[List[str]]
     authorId: Optional[str]
@@ -195,3 +211,4 @@ class S2Author(BaseModel):
     name: Optional[str]
     papers: Optional[List[S2AuthorPaper]]
     url: Optional[str]
+    obtained_utc: Optional[datetime]
