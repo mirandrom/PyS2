@@ -48,9 +48,9 @@ def get_paper(
         paperId: str,
         api_key: Optional[str] = None,
         session: Optional[requests.Session] = None,
-        return_json: Optional[bool] = False,
-        retries: Optional[int] = 2,
-        wait: Optional[int] = 150,
+        return_json: bool = False,
+        retries: int = 2,
+        wait: int = 150,
         **kwargs
 ) -> Union[Dict, S2Paper]:
     """
@@ -126,13 +126,14 @@ def get_paper(
     else:
         logger.error(f"Error {r.status_code} on paper {paperId}")
         r.raise_for_status()
+        raise
 
 
 def get_author(
         authorId: str,
         api_key: str = None,
         session: Optional[requests.Session] = None,
-        return_json: Optional[bool] = False,
+        return_json: bool = False,
         retries: int = 2,
         wait: int = 150,
         **kwargs
@@ -197,3 +198,4 @@ def get_author(
     else:
         logger.error(f"Error {r.status_code} on author {authorId}")
         r.raise_for_status()
+        raise
