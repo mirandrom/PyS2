@@ -1,5 +1,5 @@
 from s2.models import S2Paper, S2Author
-from typing import MutableMapping, Iterator, TypeVar, Generic, Type, Dict, Union, Protocol
+from typing import MutableMapping, Iterator, TypeVar, Type, Union
 
 PaperId = str
 AuthorId = str
