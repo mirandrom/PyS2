@@ -2,7 +2,7 @@ from s2.models import S2Paper, S2Author
 from collections import defaultdict
 
 from typing import Dict, List, Tuple, MutableMapping, Optional
-from typing_extensions import Literal
+from typing_extensions import Literal, get_args
 
 
 # Custom types
@@ -23,7 +23,7 @@ GraphPath = List[HopTo]
 
 
 def edge_factory():
-    return {k: [] for k in EdgeType.__args__}
+    return {k: [] for k in get_args(EdgeType)}
 
 
 class S2Graph:
