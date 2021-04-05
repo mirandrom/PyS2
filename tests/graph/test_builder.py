@@ -1,7 +1,6 @@
 from pathlib import Path
 from unittest import TestCase
-import pytest
-from ..context import models, api
+from ..context import models, rm_tree
 from ..context import JsonDS, S2Graph, S2GraphBuilder, MaxHopHopper
 
 from betamax import Betamax
@@ -39,7 +38,7 @@ class TestGraphBuilder(TestCase):
         self.missing_paperId = 'c4e3be316ce0d5dfc9ec7b19298e9483484cc252'
         self.missing_paperId_404 = 'paper'
         self.missing_paperId_429 = 'c4e3be316ce0d5dfc9ec7b19298e9483484cc252'
-        self.addCleanup(lambda: self.save_path.unlink(missing_ok=True))
+        self.addCleanup(lambda: rm_tree(self.save_path))
 
     def test_builder(self):
         # integrated-ish test

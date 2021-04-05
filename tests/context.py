@@ -16,9 +16,12 @@ def rm_tree(pth: Path):
     """ Utility for removing directory recursively"""
     pth = Path(pth)
     if pth.exists():
-        for child in pth.glob('*'):
-            if child.is_file():
-                child.unlink()
-            else:
-                rm_tree(child)
-        pth.rmdir()
+        if pth.is_file():
+            pth.unlink()
+        else:
+            for child in pth.glob('*'):
+                if child.is_file():
+                    child.unlink()
+                else:
+                    rm_tree(child)
+            pth.rmdir()

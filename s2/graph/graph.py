@@ -10,7 +10,13 @@ from typing_extensions import Literal, get_args
 #       to get custom types to play nice with docs and typechecker
 PaperId = str
 AuthorId = str
+
+# instead of EdgeType.__values__/__args__ for py3.6/3.7+ just duplicate
 EdgeType = Literal["reference", "citation", " author"]
+EdgeTypeValues = ["reference", "citation", " author"]
+def edge_factory():
+    return {k: [] for k in EdgeTypeValues}
+
 EdgeMeta = Dict
 Edges = MutableMapping[EdgeType, List[Tuple[PaperId, EdgeMeta]]]
 S2PaperMap = MutableMapping[PaperId, S2Paper]
@@ -20,10 +26,6 @@ PaperId = str
 HopFrom = Tuple[PaperId, Optional[EdgeType]]
 HopTo = Tuple[PaperId, Optional[EdgeType]]
 GraphPath = List[HopTo]
-
-
-def edge_factory():
-    return {k: [] for k in get_args(EdgeType)}
 
 
 class S2Graph:
