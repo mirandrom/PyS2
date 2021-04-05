@@ -1,14 +1,19 @@
 import requests
 import time
 from s2.models import S2Paper, S2Author
-import logging
-from typing import Optional, Union, Dict, Tuple
 import copy
+from datetime import datetime
+
+from typing import Optional, Union, Dict, Tuple
+
+import logging
+logger = logging.getLogger('s2')
+
+# TODO: time persistent session vs not; if noticeable performance increase
+#       then make session mandatory and remove api_key / build_url
 
 API_URL = "https://api.semanticscholar.org/v1"
 PARTNER_URL = "https://partner.semanticscholar.org/v1"
-
-logger = logging.getLogger('s2')
 
 
 def build_url(
@@ -43,9 +48,9 @@ def get_paper(
         paperId: str,
         api_key: Optional[str] = None,
         session: Optional[requests.Session] = None,
-        return_json: Optional[bool] = False,
-        retries: Optional[int] = 2,
-        wait: Optional[int] = 150,
+        return_json: bool = False,
+        retries: int = 2,
+        wait: int = 150,
         **kwargs
 ) -> Union[Dict, S2Paper]:
     """
@@ -104,10 +109,12 @@ def get_paper(
     r = session.get(url, **kwargs)
 
     if r.ok:
+        d = r.json()
+        d['obtained_utc'] = datetime.utcnow()
         if return_json:
-            return r.json()
+            return d
         else:
-            return S2Paper(**r.json())
+            return S2Paper(**d)
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
         logger.warning(f"Error {r.status_code} on paper {paperId}: "
@@ -125,7 +132,7 @@ def get_author(
         authorId: str,
         api_key: str = None,
         session: Optional[requests.Session] = None,
-        return_json: Optional[bool] = False,
+        return_json: bool = False,
         retries: int = 2,
         wait: int = 150,
         **kwargs
@@ -173,10 +180,12 @@ def get_author(
     r = session.get(url, **kwargs)
 
     if r.ok:
+        d = r.json()
+        d['obtained_utc'] = datetime.utcnow()
         if return_json:
-            return r.json()
+            return d
         else:
-            return S2Author(**r.json())
+            return S2Author(**d)
     # I found I was getting 403 Forbidden errors when exceeding rate limits
     elif r.status_code in [429, 403] and retries > 0:
         logger.warning(f"Error {r.status_code} on author {authorId}: "
@@ -188,3 +197,27 @@ def get_author(
     else:
         logger.error(f"Error {r.status_code} on author {authorId}")
         r.raise_for_status()
+
+
+# TODO: update public functions to return dict
+#       factor out the pydantic object parsing in a way that makes it possible
+#       for users to create and use their own models in case of API changes
+#       and to have the option for backward compatibility
+def _get_json_paper(args, **kwargs) -> Dict: # pragma: no cover
+    kwargs['return_json'] = True
+    return get_paper(args, **kwargs)
+
+
+def _get_json_author(args, **kwargs) -> Dict: # pragma: no cover
+    kwargs['return_json'] = True
+    return get_author(args, **kwargs)
+
+
+def _get_s2paper(args, **kwargs) -> S2Paper: # pragma: no cover
+    kwargs['return_json'] = False
+    return get_paper(args, **kwargs)
+
+
+def _get_s2author(args, **kwargs) -> S2Author: # pragma: no cover
+    kwargs['return_json'] = False
+    return get_author(args, **kwargs)

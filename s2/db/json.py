@@ -1,7 +1,8 @@
 from s2.models import S2Paper, S2Author
-from _collections_abc import MutableMapping
+from typing import MutableMapping
 from pathlib import Path
 import json
+import warnings
 
 import logging
 logger = logging.getLogger("s2")
@@ -10,16 +11,6 @@ from typing import Iterator, Union
 
 PaperId = str
 AuthorId = str
-
-
-# TODO: look into yapic.json/ujson/orjson for fast encoding/decoding
-# TODO: get rid of duplicate code for S2Paper/S2Author, either through:
-#       (1) class inheritance (not sure how to properly handle typing
-#           without reduplicating every method anyways)
-#       (2) a single interface with e.g. paper/author kwarg passed e.g.
-#           at class instantiation (once again not sure how to handle
-#           typing, and it doesn't feel very user-friendy)
-#       whatever gets implemented should be consistent with the s2.api interface
 
 
 class JsonS2PaperDB(MutableMapping):
@@ -59,7 +50,8 @@ class JsonS2PaperDB(MutableMapping):
             added or removed. Will likely be updated to something less scrappy.
     """
     def __init__(self, json_dir: Union[str, Path], enforce_id: bool = True):
-        self.json_dir = Path(json_dir)
+        warnings.warn("s2.db is deprecated; please use s2.store instead")
+        self.json_dir = Path(json_dir).absolute()
         self.json_dir.mkdir(exist_ok=True, parents=True)
         self.enforce_id = enforce_id
         self.paperIds = set([f.stem for f in self.json_dir.glob("*.json")])
@@ -149,7 +141,7 @@ class JsonS2AuthorDB(MutableMapping):
             added or removed. Will likely be updated to something less scrappy.
     """
     def __init__(self, json_dir: Union[str, Path], enforce_id: bool = True):
-        self.json_dir = Path(json_dir)
+        self.json_dir = Path(json_dir).absolute()
         self.json_dir.mkdir(exist_ok=True, parents=True)
         self.enforce_id = enforce_id
         self.authorIds = set([f.stem for f in self.json_dir.glob("*.json")])

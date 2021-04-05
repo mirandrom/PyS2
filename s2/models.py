@@ -1,9 +1,8 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, validator
+from datetime import datetime
+from typing import List, Optional, Iterable
 
-# TODO: add data validators for consistent handling of empty types
-#       see https://github.com/samuelcolvin/pydantic/discussions/2611#discussion-3300585
-
+# TODO: go through these and add validators for str/lists
 
 class S2Topic(BaseModel):
     """
@@ -77,7 +76,7 @@ class S2Reference(BaseModel):
     authors: Optional[List[S2PaperAuthor]]
     doi: Optional[str]
     intent: Optional[List[str]]
-    isInfluential: bool
+    isInfluential: Optional[bool]
     paperId: Optional[str]
     title: Optional[str]
     url: Optional[str]
@@ -128,6 +127,9 @@ class S2Paper(BaseModel):
             Extracted publication venue of the paper
         year (:obj:`int`, optional):
             Publication year of the paper
+        obtained_utc  (:class:`~datetime.datetime`, optional):
+            UTC datetime when obtained from API (converted to and from
+            ISO 8601 by pydantic in JSON (de)serialization)
     """
     abstract: Optional[str]
     arxivId: Optional[str]
@@ -147,6 +149,7 @@ class S2Paper(BaseModel):
     url: Optional[str]
     venue: Optional[str]
     year: Optional[int]
+    obtained_utc: Optional[datetime]
 
 
 class S2AuthorPaper(BaseModel):
@@ -187,7 +190,10 @@ class S2Author(BaseModel):
         papers  (:obj:`list` of :obj:`.S2AuthorPaper`, optional):
             List of papers written by the author
         url  (:obj:`str`, optional):
-            Semantic Scholar URL to author page.
+            Semantic Scholar URL to author page
+        obtained_utc  (:class:`~datetime.datetime`, optional):
+            UTC datetime when obtained from API (converted to and from
+            ISO 8601 by pydantic in JSON (de)serialization)
     """
     aliases: Optional[List[str]]
     authorId: Optional[str]
@@ -195,3 +201,4 @@ class S2Author(BaseModel):
     name: Optional[str]
     papers: Optional[List[S2AuthorPaper]]
     url: Optional[str]
+    obtained_utc: Optional[datetime]
