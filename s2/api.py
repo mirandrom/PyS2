@@ -126,7 +126,6 @@ def get_paper(
     else:
         logger.error(f"Error {r.status_code} on paper {paperId}")
         r.raise_for_status()
-        raise
 
 
 def get_author(
@@ -198,4 +197,27 @@ def get_author(
     else:
         logger.error(f"Error {r.status_code} on author {authorId}")
         r.raise_for_status()
-        raise
+
+
+# TODO: update public functions to return dict
+#       factor out the pydantic object parsing in a way that makes it possible
+#       for users to create and use their own models in case of API changes
+#       and to have the option for backward compatibility
+def _get_json_paper(args, **kwargs) -> Dict: # pragma: no cover
+    kwargs['return_json'] = True
+    return get_paper(args, **kwargs)
+
+
+def _get_json_author(args, **kwargs) -> Dict: # pragma: no cover
+    kwargs['return_json'] = True
+    return get_author(args, **kwargs)
+
+
+def _get_s2paper(args, **kwargs) -> S2Paper: # pragma: no cover
+    kwargs['return_json'] = False
+    return get_paper(args, **kwargs)
+
+
+def _get_s2author(args, **kwargs) -> S2Author: # pragma: no cover
+    kwargs['return_json'] = False
+    return get_author(args, **kwargs)

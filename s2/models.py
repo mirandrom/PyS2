@@ -2,19 +2,9 @@ from pydantic import BaseModel, validator
 from datetime import datetime
 from typing import List, Optional, Iterable
 
+# TODO: go through these and add validators for str/lists
 
-class S2Model(BaseModel):
-    @validator('*', pre=True)
-    def convert_to_none(cls, v):
-        if isinstance(v, str) and v.strip() == "":
-            return None
-        if isinstance(v, Iterable) and len(v) == 0:
-            return None
-        else:
-            return v
-
-
-class S2Topic(S2Model):
+class S2Topic(BaseModel):
     """
     Class for topics in :class:`.models.S2Paper`
 
@@ -32,7 +22,7 @@ class S2Topic(S2Model):
     url: Optional[str]
 
 
-class S2PaperAuthor(S2Model):
+class S2PaperAuthor(BaseModel):
     """
     Class for authors in :class:`.S2Paper`
     or :class:`.S2Reference`
@@ -54,7 +44,7 @@ class S2PaperAuthor(S2Model):
     url: Optional[str] = None
 
 
-class S2Reference(S2Model):
+class S2Reference(BaseModel):
     """
     Class for papers that are references/citations in :class:`.S2Paper`
 
@@ -86,7 +76,7 @@ class S2Reference(S2Model):
     authors: Optional[List[S2PaperAuthor]]
     doi: Optional[str]
     intent: Optional[List[str]]
-    isInfluential: bool
+    isInfluential: Optional[bool]
     paperId: Optional[str]
     title: Optional[str]
     url: Optional[str]
@@ -94,7 +84,7 @@ class S2Reference(S2Model):
     year: Optional[int]
 
 
-class S2Paper(S2Model):
+class S2Paper(BaseModel):
     """
     Class for Semantic Scholar paper object
 
@@ -162,7 +152,7 @@ class S2Paper(S2Model):
     obtained_utc: Optional[datetime]
 
 
-class S2AuthorPaper(S2Model):
+class S2AuthorPaper(BaseModel):
     """
     Class for papers in :class:`.S2Author`
 
@@ -183,7 +173,7 @@ class S2AuthorPaper(S2Model):
     year: Optional[int]
 
 
-class S2Author(S2Model):
+class S2Author(BaseModel):
     """
     Class for Semantic Scholar author object
 
