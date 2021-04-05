@@ -1,7 +1,8 @@
 from s2.models import S2Paper, S2Author
 from collections import defaultdict
 
-from typing import Dict, List, Tuple, MutableMapping, Literal, Optional
+from typing import Dict, List, Tuple, MutableMapping, Optional
+from typing_extensions import Literal
 
 
 # Custom types
