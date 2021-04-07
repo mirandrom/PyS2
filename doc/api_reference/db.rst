@@ -7,7 +7,7 @@ s2.db
 
 PyS2 allows you to store and retrieve :class:`S2Paper` and :class:`S2Author`
 objects via arbitrary :class:`MutableMapping` classes. For an example, see
-:any:`saving_with_db`.
+:any:`saving_with_store`.
 
 .. toctree::
     :maxdepth: 2

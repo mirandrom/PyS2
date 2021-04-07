@@ -143,43 +143,43 @@ published *h* papers that have each been cited at least *h* times.
 
 Which gives us an *h*-index 12 for Bill Gates!
 
-.. _saving_with_db:
+.. _saving_with_store:
 
-Working Locally with :any:`s2.db`
+Working Locally with :any:`s2.store`
 --------------------------------------------------------------------------------
-The :any:`s2.db` API makes it easy to save and retrieve your :class:`.S2Paper`
+The :any:`s2.store` API makes it easy to save and retrieve your :class:`.S2Paper`
 and :class:`.S2Author` objects through a dict-like interface.
 
 .. code-block:: python
 
-    from s2.db.json import JsonS2PaperDB, JsonS2AuthorDB
+    from s2.store import JsonDS
 
     # path of directory where S2Papers will be saved as jsons
-    s2paper_json_dir = "pdb"
+    s2paper_json_dir = "pds"
 
     # if the directory does not exist, it is created
     # otherwise, previously saved S2Papers become accessible
-    pdb = JsonS2PaperDB(s2paper_json_dir)
+    pds = JsonDS.load_papers(s2paper_json_dir)
 
     # lets save Bill's papers from the previous example
     for p in papers:
-        pdb[p.paperId] = p
+        pds[p.paperId] = p
 
     # now lets delete pdb and recover Bill's papers
-    del pdb
-    pdb = JsonS2PaperDB(s2paper_json_dir)
+    del pds
+    pds = JsonDS.load_papers(s2paper_json_dir)
     for p in papers:
-        p2 = pdb[p.paperId]
+        p2 = pds[p.paperId]
         assert p2 == p
 
     # we can do the same for S2Author objects
-    adb = JsonS2AuthorDB("adb")
-    adb[author.authorId] = author
+    ads = JsonDS.load_authors("ads")
+    ads[author.authorId] = author
 
     # note that setting a value requires the key to be equal to the
     # S2 identifier of the object, but this behaviour can be disabled
-    adb = JsonS2AuthorDB("adb", enforce_id=False)
-    adb["billy"] = author
+    ads = JsonDS.load_authors("ads", enforce_id=False)
+    ads["billy"] = author
 
 
 .. _saving_unknown:
@@ -194,10 +194,12 @@ via different methods at a later date). To do this, you can cast it to
 
 .. code-block:: python
 
-    from s2.db.json import JsonS2PaperDB, JsonS2AuthorDB
+    from s2.store import JsonDS
+    from s2.models import S2Paper
+    import hashlib
 
     # note that enforce_id=False is not necessary
-    pdb = JsonS2PaperDB("pdb")
+    pds = JsonDS.load_papers("pds")
 
     # lets hunt ourselves an unknown reference from Bill's paper
     paper = s2.api.get_paper(
@@ -211,5 +213,44 @@ via different methods at a later date). To do this, you can cast it to
     # create a 40-char key from the hashed content and a signpost prefix
     hash = hashlib.md5(r.json().encode("utf-8")).hexdigest()
     placeholder_id = f"unknown_{hash}"
-    pdb[placeholder_id] = S2Paper(**r.dict())
+    pds[placeholder_id] = S2Paper(**r.dict())
+
+
+Citation graphs with :any:`s2.graph`
+--------------------------------------------------------------------------------
+The :any:`s2.graph` API makes it easy to construct citation graphs.
+
+
+.. code-block:: python
+
+    from s2.store import JsonDS
+    from s2.graph import S2Graph, S2GraphBuilder, MaxPaperHopper
+
+    # define the root paper id from which you will construct the graph
+    paper_id = 'bdfa1a62c964f19b5ce000d7812ba9f66456a4a4'
+    # create an empty graph with a new JsonDS datastore
+    # note that by default, S2Graph will use dictionaries which are faster
+    # but have a larger memory footprint and need to be saved periodically.
+    graph = S2Graph(papers=JsonDS.load_papers('graph_papers'))
+
+    # create a GraphHopper to obtain the neighborhood of a paper;
+    # MaxPaperHopper(10) will get 10 papers in a breadth-first search
+    # of the paper's citation network (including the root paper itself).
+
+    hopper = MaxPaperHopper(10)
+
+    # create the GraphBuilder object and build your graph
+    # if it is interrupted (e.g. from an error or keyboard interrupt)
+    # then progress is automatically saved to ``save_path``
+    builder = S2GraphBuilder(graph=graph, hopper=hopper, save_path='graph.pkl')
+    builder.from_paper_id(paper_id)
+    builder.save()
+
+    # Note: when a paper is added, all of its neighbours are also added
+    # to the graph, but not their outgoing edges. This means that you are
+    # actually scraping 1000s of papers; so feel free to keyboard interrupt
+    # after a few papers as the builder will automatically save.
+    builder.load('graph.pkl')
+    builder.graph.edges[paper_id]
+
 
