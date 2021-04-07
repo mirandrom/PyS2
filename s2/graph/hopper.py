@@ -126,3 +126,51 @@ class BowtieHopper(GraphHopper):
             if len(set([p[1] for p in gpath[1:]])) != 1:
                 return False
         return True
+
+
+class LivingLitReviewHopper(GraphHopper):
+    """Similar to :class:`BowtieHopper` except on the references of a paper.
+
+    Used for the Living LitReview project to obtain papers that are more likely
+    to be topically related to the content from the original literature review.
+
+    Args:
+        max_reference (:obj:`int`, optional):
+            Max distance allowed from the root paper references in path of
+            references.
+            Defaults to ``1``.
+
+        max_citation (:obj:`int`, optional):
+            Max distance allowed from the root paper references
+            in path of citations.
+            Defaults to ``1``.
+
+        verify_gpath (:obj:`bool`, optional):
+            If ``False``, then assume that the path leading to the current
+            node already consists exclusively of citations of citations or of
+            references of references. Otherwise, checks every paper in ``gpath``
+            to ensure this condition is met. Defaults to ``False``.
+    """
+    def __init__(self,
+                 max_reference: int = 1,
+                 max_citation: int = 1,
+                 verify_gpath: bool = False
+                 ):
+        self.max_reference = max_reference
+        self.max_citation = max_citation
+        self.verify_gpath = verify_gpath
+
+    def hop(self, gpath: GraphPath, graph: S2Graph) -> bool:
+        edge_type = gpath[-1][1]
+        if gpath[1][1] != 'reference':
+            return False
+        if len(gpath) - 2 > getattr(self, f"max_{edge_type}"):
+            return False
+        # edge type on root node will be None and != edge_type for len(gpath)=2
+        if len(gpath) > 2 and gpath[-2][1] != edge_type:
+            return False
+        if self.verify_gpath:
+            # gpath[0] is the root node with edge_type None
+            if len(set([p[1] for p in gpath[2:]])) != 1:
+                return False
+        return True

@@ -7,7 +7,8 @@ from s2 import api, models
 from s2.db import JsonS2PaperDB, JsonS2AuthorDB
 from s2.store import JsonDS
 from s2.graph import S2Graph
-from s2.graph import GraphHopper, MaxHopHopper, MaxPaperHopper, BowtieHopper
+from s2.graph import (GraphHopper, MaxHopHopper, MaxPaperHopper, BowtieHopper,
+                      LivingLitReviewHopper)
 from s2.graph import S2GraphBuilder
 from pathlib import Path
 

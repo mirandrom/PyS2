@@ -1,6 +1,8 @@
 from unittest import TestCase
 from ..context import JsonDS, S2Graph
-from ..context import GraphHopper, MaxHopHopper, MaxPaperHopper, BowtieHopper
+from ..context import (GraphHopper, MaxHopHopper, MaxPaperHopper, BowtieHopper,
+                       LivingLitReviewHopper)
+
 
 def load_s2graph():
     # this datastore contains 58 papers connected to the paper with PaperId
@@ -91,3 +93,15 @@ class TestGraphHopper(TestCase):
         assert bowtie2.hop(gpath3, self.s2graph)
         gpath3 = [("0", None), ("1", "reference"), ("1", "citation"), ("2", "citation")]
         assert not bowtie2.hop(gpath3, self.s2graph)
+        # LivingLitreview
+        # verify max_references/max_citation
+        assert LivingLitReviewHopper(1,2).hop(gpath3, self.s2graph)
+        assert not LivingLitReviewHopper(1,1).hop(gpath3, self.s2graph)
+        # verify first hop is reference
+        gpath3 = [("0", None), ("1", "citation"), ("1", "citation"), ("2", "citation")]
+        assert not LivingLitReviewHopper(1, 2).hop(gpath3, self.s2graph)
+        # verify inconsisent gpath
+        gpath3 = [("0", None), ("1", "reference"), ("1", "reference"), ("2", "citation")]
+        assert not LivingLitReviewHopper(1, 2).hop(gpath3, self.s2graph)
+        gpath3 = [("0", None), ("1", "reference"), ("1", "reference"), ("2", "citation"), ("3", "citation")]
+        assert not LivingLitReviewHopper(1, 3, verify_gpath=True).hop(gpath3, self.s2graph)
