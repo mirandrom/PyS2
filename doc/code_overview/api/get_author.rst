@@ -1,4 +1,0 @@
-get_author
-==========
-
-.. autofunction:: s2.api.get_author

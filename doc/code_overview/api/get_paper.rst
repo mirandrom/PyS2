@@ -1,5 +1,0 @@
-get_paper
-=========
-
-.. autofunction:: s2.api.get_paper
-
