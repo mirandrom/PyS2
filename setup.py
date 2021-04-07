@@ -43,10 +43,13 @@ setup(
     python_requires=">=3.6, <4",
     install_requires=[
         "requests >=2.6, <3.0",
-        "pydantic >=1.8, < 2.0",
+        "pydantic >=1.8, <2.0",
     ],
     extras_require={
-        "readthedocs": ["sphinx>=3, <4.0"],
+        "readthedocs": [
+            "sphinx >= 3, <4.0",
+            "sphinx-autodoc-typehints >= 1.11, <2.0 "
+        ],
         "test": [
             "betamax >=0.8, <0.9",
             "pytest >=6, <7",
