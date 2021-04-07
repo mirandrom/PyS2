@@ -1,3 +1,5 @@
+.. _s2.api:
+
 s2.api
 ================================================================================
 PyS2 uses :meth:`requests.Session.get` to query Semantic Scholar API

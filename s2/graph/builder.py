@@ -26,9 +26,35 @@ logger.setLevel(logging.INFO)
 
 
 class S2GraphBuilder:
-    '''
+    """ Builds an :class:`S2Graph` object.
 
-    '''
+    Args:
+        graph:
+            The :class:`S2Graph` object to build or
+            continue buiding.
+        hopper:
+            The :class:`GraphHopper` object that
+            defines the strategy for building the citation
+            network subgraph.
+        queue:
+            A queue of papers that remain to be added. Everytime
+            a paper is added, all its neighbours are added to the
+            queue and the ``hopper`` will decide whether these papers
+            should also be added.
+        discovered_from:
+            A dictionary for reconstructing graph paths.
+        not_found:
+            A set of paper identifiers that were not found, to allow
+            subsequent follow-up.
+        colliding_paperIds:
+            A dictionary of papers with inconsistent identifiers.
+        log_every:
+            Log updates every x paper added.
+        save_path:
+            Where to save progress in event of interruption.
+        **api_kwargs:
+            Additional kwargs for the ::`` module.
+    """
     def __init__(self,
                  graph: S2Graph = S2Graph(),
                  hopper: GraphHopper = MaxHopHopper(1),
@@ -67,9 +93,9 @@ class S2GraphBuilder:
         return pickle.loads(p.read_bytes())
 
     def _get_gpath(self, paperId: PaperId) -> GraphPath:
-        '''
+        """
         Get the path that was traversed to reach ``paperId`` in the ``S2Graph``.
-        '''
+        """
         node_lookup = set()
             # node_lookup.add(paperId)
             # (source, edge_type) = self.discovered_from[paperId]
@@ -89,9 +115,9 @@ class S2GraphBuilder:
         return list(gpath)
 
     def _get_paper(self, paperId: PaperId) -> S2Paper:
-        '''
+        """
         Get an ``S2Paper`` via its ``paperId``, checking local db first.
-        '''
+        """
         try:
             return self.graph.papers[paperId]
         except KeyError:
@@ -106,9 +132,9 @@ class S2GraphBuilder:
 
     def _add_to_queue(self, ref: S2Reference, source: PaperId,
                       edge_type: EdgeType) -> None:
-        '''
+        """
         Add ref to queue, record ref visit, and add edge from source to ref.
-        '''
+        """
         pid = ref.paperId
         # The ref has an S2 identifier and hasn't been visited/discovered yet
         # Add it to the queue so its full S2Paper can be recovered
@@ -135,13 +161,14 @@ class S2GraphBuilder:
         self.graph.edges[source][edge_type] += [(pid, edge_meta)]
 
     def from_paper_id(self, paperId: str):
-        ''' Construct ``S2Graph`` from ``paperId`` based on ``hopper`` strategy.
+        """ Construct :class:`S2Graph` from :class:`PaperId` based on
+        :class:`GraphHopper` strategy.
 
 
         Args:
-            paperId (``str``):
+            paperId:
                 S2 paper identifier (see :func:`.get_paper` for more info)
-        '''
+        """
         if paperId not in self.discovered_from:
             self.queue.append(paperId)
             self.discovered_from[paperId] = ("", None)

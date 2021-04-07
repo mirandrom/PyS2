@@ -25,6 +25,8 @@ PyS2's documentation is organized into the following sections:
     api_reference/models
     api_reference/api
     api_reference/db
+    api_reference/store
+    api_reference/graph
 
 .. _package_info:
 

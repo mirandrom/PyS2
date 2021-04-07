@@ -1,8 +1,5 @@
 from s2.graph import S2Graph, GraphPath
 
-PaperId = str
-AuthorId = str
-
 
 class GraphHopper:
     """
@@ -47,15 +44,15 @@ class GraphHopper:
 
 
 class MaxHopHopper(GraphHopper):
-    def __init__(self, max_hops: int = 1):
-        """Hops until a max distance from the root paper is exceeded.
+    """Hops until a max distance from the root paper is exceeded.
 
-        Args:
-            max_hops (:obj:`int`, optional):
-                Max number of hops from the root paper (``len(gpath) - 1``)
-                beyond which :meth:`GraphHopper.hop` returns False.
-                Defaults to ``1``.
-        """
+    Args:
+        max_hops (:obj:`int`, optional):
+            Max number of hops from the root paper (``len(gpath) - 1``)
+            beyond which :meth:`GraphHopper.hop` returns False.
+            Defaults to ``1``.
+    """
+    def __init__(self, max_hops: int = 1):
         self.max_hops = max_hops
 
     def hop(self, gpath: GraphPath, graph: S2Graph) -> bool:
@@ -66,18 +63,18 @@ class MaxHopHopper(GraphHopper):
 
 
 class MaxPaperHopper(GraphHopper):
+    """Hops until a max number of papers are added to the graph.
+
+    Args:
+        max_papers (:obj:`int`, optional):
+            Max number of papers in ``graph`` beyond which
+            :meth:`GraphHopper.hop` returns False. Defaults to ``1``.
+
+            Note that the number of papers is ``len(graph.edges)``, as
+            ``graph.papers`` is an instance of :class:``S2DataStore`` which
+            may contain papers not in the graph.
+    """
     def __init__(self, max_papers: int = 10):
-        """Hops until a max number of papers are added to the graph.
-
-        Args:
-            max_papers (:obj:`int`, optional):
-                Max number of papers in ``graph`` beyond which
-                :meth:`GraphHopper.hop` returns False. Defaults to ``1``.
-
-                Note that the number of papers is ``len(graph.edges)``, as
-                ``graph.papers`` is an instance of :class:``S2DataStore`` which
-                may contain papers not in the graph.
-        """
         self.max_papers = max_papers
 
     def hop(self, gpath: GraphPath, graph: S2Graph) -> bool:
@@ -94,11 +91,11 @@ class BowtieHopper(GraphHopper):
     of references of references, up to specified lengths.
 
     Args:
-        max_ref (:obj:`int`, optional):
+        max_reference (:obj:`int`, optional):
             Max distance allowed from the root paper in path of references.
             Defaults to ``1``.
 
-        max_cit (:obj:`int`, optional):
+        max_citation (:obj:`int`, optional):
             Max distance allowed from the root paper in path of citations.
             Defaults to ``1``.
 

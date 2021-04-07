@@ -21,12 +21,15 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
+    "sphinx_autodoc_typehints"
 ]
 
 intersphinx_mapping = {
     'python': ('http://docs.python.org/3', None),
     'requests': ('https://requests.readthedocs.io/en/v2.6.2', None),
 }
+
+autodoc_typehints = 'none'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
