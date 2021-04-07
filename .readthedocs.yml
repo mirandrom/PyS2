@@ -1,2 +1,9 @@
+formats:
+  - htmlzip
 python:
-   setup_py_install: true
+  install:
+    - method: pip
+      extra_requirements:
+        - readthedocs
+      path: .
+  version: 3.8
